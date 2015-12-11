@@ -4,31 +4,14 @@
 # License: MIT
 #
 
+source /etc/sysreporter.conf
+
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPTPATH="$DIR/$(basename $0)"
 
 ## Current datetime
 DATENOW="$(date "+%F %H:%M:%S")"
-
-# User defined variables
-## Name of server
-SERVERNAME="$(hostname)"
-
-## Enable/disable emailed reports
-EMAIL_REPORT=true
-
-## Email addresses to send, separated by comma
-EMAIL_ADDRESSES=""
-
-## Email address to use a from address
-EMAIL_FROM=""
-
-## Report title
-TITLE="Server Report for $SERVERNAME on $DATENOW"
-
-## Email subject line
-EMAIL_SUBJECT="Server Report - $SERVERNAME"
 
 # Script variables
 ## Temp directory
