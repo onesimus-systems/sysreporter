@@ -4,7 +4,8 @@
 # License: MIT
 #
 
-source /etc/sysreporter.conf
+## Script version
+VERSION="3.0.0a"
 
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,21 +14,22 @@ SCRIPTPATH="$DIR/$(basename $0)"
 ## Current datetime
 DATENOW="$(date "+%F %H:%M:%S")"
 
+## Import server specific configuration
+if [ -f /etc/sysreporter.conf ]; then
+	source /etc/sysreporter.conf
+elif [ -f "$DIR/sysreporter.conf" ]; then
+	source "$DIR/sysreporter.conf"
+else
+	>2& echo "No configuration file found"
+	exit 1
+fi
+
 # Script variables
-## Temp directory
-TEMPDIR="$DIR/tmp"
-
-## Directory where report scripts are placed
-REPORTSDIR="$DIR/reports.d/*.sh"
-
 ## File for temporary output of currently compiled log, truncated on each run
 LOGFILE="$TEMPDIR/compiledlog.log"
 
 ## Temp file for compiling email message
 TEMPMAIL="$TEMPDIR/mail"
-
-## Script version
-VERSION="3.0.0a"
 
 ## Functions
 cleanup() {
