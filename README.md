@@ -13,8 +13,9 @@ Install
 -------
 
 * Move the SysReporter directory to a place of your choosing
-* Edit report.sh and fill in the server name variable and the email addresses to send the report (separated by comma).
-* Install and setup ssmtp if email reports
+* Move sysreporter.conf to /etc
+* Edit /etc/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
+* Install and setup ssmtp if you would like to receive the reports via email
 * Setup a cron job to run periodically
 * The default set of reports includes one called "sar" (System Activity Report) which requires the sysstat package. If this package is not installed the report won't run. If you want to use sar follow these instructions:
     - Install the sysstat package
