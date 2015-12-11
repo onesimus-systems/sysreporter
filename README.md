@@ -38,7 +38,7 @@ Commands:
 Reports
 -------
 
-    Reports are located in the reports.d folder. Reports must be executable. Unexecutable files will be ignored as well as files without the .sh extension. The script may invoke any other program or shell but must accept at least two arguments. Argument 1 is the filename of the reporter script. Argument 2 is either "header" or "body". When invoked with "header", the script should print to standard output the header of the report. Likewise when invoked with "body" it should print the main part of the report. Everything printed to standard output will be included in the report. See the default reports for examples. Reports are executed in the alphabetical order. To ensure a particular order it is recommended to use a numbered prefix such as 10-Report.sh, 20-Report2.sh. This will ensure correct order.
+Reports are located in the reports.d folder. Reports must be executable. Unexecutable files will be ignored as well as files without the .sh extension. The script may invoke any other program or shell but must accept at least two arguments. Argument 1 is the filename of the reporter script. Argument 2 is either "header" or "body". When invoked with "header", the script should print to standard output the header of the report. Likewise when invoked with "body" it should print the main part of the report. Everything printed to standard output will be included in the report. See the default reports for examples. Reports are executed in the alphabetical order. To ensure a particular order it is recommended to use a numbered prefix such as 10-Report.sh, 20-Report2.sh. This will ensure correct order.
 
 Default Reports (30s)
 ---------------------
