@@ -1,10 +1,8 @@
 #! /bin/bash
-if [ "$2" == "header" ]; then
-	echo "Nginx Error Log"
-elif [ "$2" == "body" ]; then
-	TAIL="$(tail /var/log/nginx/error.log 2> /dev/null)"
-	if [ $? != 0 ]; then
-		echo "Nginx error log file not found"
-	fi
-	echo $TAIL
+echo "Nginx Error Log"
+
+if [ -f /var/log/nginx/error.log ]; then
+	echo "$(tail /var/log/nginx/error.log)"
+else
+	echo "Nginx error log file not found"
 fi

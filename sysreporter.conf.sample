@@ -1,24 +1,21 @@
-# User defined variables
-## Name of server
-export SERVERNAME="$(hostname)"
-
-## Enable/disable emailed reports
-export EMAIL_REPORT=true
+# SysReporter configuration
+#
+# Available settings and defaults:
+# SERVERNAME="$(hostname)"
+# EMAIL_REPORT=true
+# EMAIL_TO=""
+# EMAIL_FROM="root@$SERVERNAME"
+# EMAIL_SUBJECT="Server Report - $SERVERNAME"
+# TITLE="Server Report for $SERVERNAME on $DATENOW"
+# REPORTSDIR="$DIR/reports.d"
+# TEMPDIR="$DIR/tmp"
+# FILTER=.* # Note, no double quotes
+#
+# Syntax:
+# export SETTING_NAME="value"
 
 ## Email addresses to send report to, separated by comma
-export EMAIL_ADDRESSES="me@somewhere.com"
+export EMAIL_TO=""
 
 ## Email address to use a from address
-export EMAIL_FROM="me@somewhere.com"
-
-## Report title
-export TITLE="Server Report for $SERVERNAME on $DATENOW"
-
-## Email subject line
-export EMAIL_SUBJECT="Server Report - $SERVERNAME"
-
-## Directory where report scripts are placed
-export REPORTSDIR="$DIR/reports.d/*.sh"
-
-## Temporary directory
-export TEMPDIR="$DIR/tmp"
+export EMAIL_FROM=""

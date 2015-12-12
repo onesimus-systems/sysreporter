@@ -9,13 +9,13 @@ VERSION="3.0.0a"
 
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPTPATH="$DIR/$(basename $0)"
+SCRIPTPATH="$DIR/$(basename "$0")"
 
 ## Current datetime
 DATENOW="$(date "+%F %H:%M:%S")"
 
 echoError() {
-	>&2 echo "$1"
+	>&2 echo -e "$1"
 }
 
 # Import server specific configuration
@@ -31,12 +31,13 @@ fi
 # Check and set any missing configuration settings
 if [ -z ${SERVERNAME+x} ]; then SERVERNAME="$(hostname)"; fi
 if [ -z ${EMAIL_REPORT+x} ]; then EMAIL_REPORT=true; fi
-if [ -z ${EMAIL_ADDRESSES+x} ]; then EMAIL_ADDRESSES=""; fi
+if [ -z ${EMAIL_TO+x} ]; then EMAIL_TO=""; fi
 if [ -z ${EMAIL_FROM+x} ]; then EMAIL_FROM="root@$SERVERNAME"; fi
 if [ -z ${TITLE+x} ]; then TITLE="Server Report for $SERVERNAME on $DATENOW"; fi
 if [ -z ${EMAIL_SUBJECT+x} ]; then EMAIL_SUBJECT="Server Report - $SERVERNAME"; fi
-if [ -z ${REPORTSDIR+x} ]; then REPORTSDIR="$DIR/reports.d/*.sh"; fi
+if [ -z ${REPORTSDIR+x} ]; then REPORTSDIR="$DIR/reports.d"; fi
 if [ -z ${TEMPDIR+x} ]; then TEMPDIR="$DIR/tmp"; fi
+if [ -z ${FILTER+x} ]; then FILTER=*.sh; fi
 
 # Script variables
 ## File for temporary output of currently compiled log, truncated on each run
@@ -60,52 +61,58 @@ print_header() {
 }
 
 cmd_show() {
-	SAVEIFS=$IFS
-	IFS=$(echo -en "\n\b")
-	for f in $REPORTSDIR; do
+	ENABLED_ARR=()
+	DISABLED_ARR=()
+
+	cd "$REPORTSDIR"
+	for f in $FILTER; do
 		if [ -x "$f" ]; then
-			echo $(basename $f)
+			ENABLED_ARR+=("$f")
+		else
+			DISABLED_ARR+=("$f")
 		fi
 	done
-	IFS=$SAVEIFS
+	cd "$DIR"
+
+	echo "Enabled:"
+	for f in "${ENABLED_ARR[@]}"; do echo "$f"; done
+	echo
+	echo "Disabled:"
+	for f in "${DISABLED_ARR[@]}"; do echo "$f"; done
 }
 
 cmd_enable_disable() {
-	MODE="$1"
-
-	SAVEIFS=$IFS
-	IFS=$(echo -en "\n\b")
-	for f in $REPORTSDIR; do
-		FILE="$(basename $f)"
-		if [[ "$FILE" =~ "$2" ]]; then
-			case "$MODE" in
+	cd "$REPORTSDIR"
+	for f in $FILTER; do
+		if [[ "$f" =~ "$2" ]]; then
+			case $1 in
 				enable)
-					echo "Enabling $FILE"
+					echo "Enabling $f"
 					chmod +x $f
 					;;
 				disable)
-					echo "Disabling $FILE"
+					echo "Disabling $f"
 					chmod -x $f
 			esac
 		fi
 	done
-	IFS=$SAVEIFS
+	cd "$DIR"
 }
 
 cmd_run() {
 	cleanup
 	print_header "$TITLE"
 
-	SAVEIFS=$IFS
-	IFS=$(echo -en "\n\b")
-	for f in $REPORTSDIR; do
+	cd "$REPORTSDIR"
+	for f in $FILTER; do
 		if [ -x "$f" ]; then
-			print_header "$($f $SCRIPTPATH header)"
-			print_to_report "$($f $SCRIPTPATH body)"
+			REPORT="$(./$f)"
+			print_header "$(echo "$REPORT" | head -1)"
+			print_to_report "$(echo "$REPORT" | tail -n +2)"
 			print_to_report
 		fi
 	done
-	IFS=$SAVEIFS
+	cd "$DIR"
 
 	mail_report
 	return
@@ -121,17 +128,17 @@ mail_report() {
 		return 1
 	fi
 
-	if [ -z "$EMAIL_ADDRESSES" ]; then
+	if [ -z "$EMAIL_TO" ]; then
 		echoError "No email addresses specified, can't send email"
 		return 1
 	fi
 
-	echo "To: $EMAIL_ADDRESSES" >> "$TEMPMAIL"
+	echo "To: $EMAIL_TO" >> "$TEMPMAIL"
 	echo "From: $EMAIL_FROM" >> "$TEMPMAIL"
 	echo "Subject: $EMAIL_SUBJECT" >> "$TEMPMAIL"
 	echo >> "$TEMPMAIL"
 	cat "$LOGFILE" >> "$TEMPMAIL"
-	ssmtp "$EMAIL_ADDRESSES" < "$TEMPMAIL"
+	ssmtp "$EMAIL_TO" < "$TEMPMAIL"
 }
 
 cmd_usage() {
@@ -154,7 +161,9 @@ cmd_version() {
 	echo "Version $VERSION"
 }
 
-## Dispatch command to appropiate function
+cd "$DIR"
+
+# Dispatch command to appropiate function
 case "$1" in
 	run) shift;				cmd_run "$@" ;;
 	show) shift;			cmd_show "$@" ;;
