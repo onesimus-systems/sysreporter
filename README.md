@@ -12,12 +12,12 @@ Requirements
 Install
 -------
 
-* Move the SysReporter directory to a place of your choosing
-* Move sysreporter.conf to /etc
-* Edit /etc/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
-* Install and setup ssmtp if you would like to receive the reports via email
-* Setup a cron job to run periodically
-* The default set of reports includes one called "sar" (System Activity Report) which requires the sysstat package. If this package is not installed the report won't run. If you want to use sar follow these instructions:
+1. Move the SysReporter directory to a place of your choosing
+2. Move sysreporter.conf to /etc
+3. Edit /etc/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
+4. Install and setup ssmtp if you would like to receive the reports via email
+5. Setup a cron job to run periodically
+6. The default set of reports includes one called "sar" (System Activity Report) which requires the sysstat package. If this package is not installed the report won't run. If you want to use sar follow these instructions:
     - Install the sysstat package
     - Edit /etc/default/sysstat and change Enabled to true
     - Run "sudo service sysstat restart"
@@ -26,15 +26,16 @@ Install
 Usage
 -----
 
-report.sh [command] [arguments]
+sysreport [command] [arguments]
 
 Commands:
-    - run - Run a full report and email if enabled
-    - show - Show reports that will be ran
-    - enable - Enable a set of reports `report.sh enable 41` or `report.sh enable apache`
-    - disable - Disable a set of reports, same syntax as enable
-    - help - Show usage
-    - version - Show version
+
+- `run` - Run a full report and email if enabled
+- `show` - Show reports that will be ran
+- `enable` - Enable a set of reports `report.sh enable 41` or `report.sh enable apache`
+- `disable` - Disable a set of reports, same syntax as enable
+- `help` - Show usage
+- `version` - Show version
 
 Reports
 -------
