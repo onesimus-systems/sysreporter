@@ -14,15 +14,29 @@ SCRIPTPATH="$DIR/$(basename $0)"
 ## Current datetime
 DATENOW="$(date "+%F %H:%M:%S")"
 
-## Import server specific configuration
+echoError() {
+	>&2 echo "$1"
+}
+
+# Import server specific configuration
 if [ -f /etc/sysreporter.conf ]; then
 	source /etc/sysreporter.conf
 elif [ -f "$DIR/sysreporter.conf" ]; then
 	source "$DIR/sysreporter.conf"
 else
-	>2& echo "No configuration file found"
+	echoError "No configuration file found"
 	exit 1
 fi
+
+# Check and set any missing configuration settings
+if [ -z ${SERVERNAME+x} ]; then SERVERNAME="$(hostname)"; fi
+if [ -z ${EMAIL_REPORT+x} ]; then EMAIL_REPORT=true; fi
+if [ -z ${EMAIL_ADDRESSES+x} ]; then EMAIL_ADDRESSES=""; fi
+if [ -z ${EMAIL_FROM+x} ]; then EMAIL_FROM="root@$SERVERNAME"; fi
+if [ -z ${TITLE+x} ]; then TITLE="Server Report for $SERVERNAME on $DATENOW"; fi
+if [ -z ${EMAIL_SUBJECT+x} ]; then EMAIL_SUBJECT="Server Report - $SERVERNAME"; fi
+if [ -z ${REPORTSDIR+x} ]; then REPORTSDIR="$DIR/reports.d/*.sh"; fi
+if [ -z ${TEMPDIR+x} ]; then TEMPDIR="$DIR/tmp"; fi
 
 # Script variables
 ## File for temporary output of currently compiled log, truncated on each run
@@ -31,7 +45,7 @@ LOGFILE="$TEMPDIR/compiledlog.log"
 ## Temp file for compiling email message
 TEMPMAIL="$TEMPDIR/mail"
 
-## Functions
+# Functions
 cleanup() {
 	cat /dev/null > "$LOGFILE"
 	cat /dev/null > "$TEMPMAIL"
@@ -103,12 +117,12 @@ mail_report() {
 	fi
 
 	if [ -z "$(which ssmtp)" ]; then
-		>&2 echo "Can't send mail, ssmtp not installed"
+		echoError "Can't send mail, ssmtp not installed"
 		return 1
 	fi
 
 	if [ -z "$EMAIL_ADDRESSES" ]; then
-		>&2 echo "No email addresses specified, can't send email"
+		echoError "No email addresses specified, can't send email"
 		return 1
 	fi
 

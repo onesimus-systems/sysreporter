@@ -6,7 +6,7 @@
 exit 0 # Remove this line before using as template
 
 if [ "$2" == "header" ]; then
-    echo ""
+	echo ""
 elif [ "$2" == "body" ]; then
-    echo ""
+	echo ""
 fi

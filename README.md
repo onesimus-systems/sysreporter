@@ -7,7 +7,7 @@ Requirements
 ------------
 
 * ssmtp (if emailing is enabled)
-* sar (if using the default system activity report)
+* sysstat (if using the DiskCPUio, processStats, or sar reports)
 
 Install
 -------
@@ -17,11 +17,11 @@ Install
 3. Edit /etc/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
 4. Install and setup ssmtp if you would like to receive the reports via email
 5. Setup a cron job to run periodically
-6. The default set of reports includes one called "sar" (System Activity Report) which requires the sysstat package. If this package is not installed the report won't run. If you want to use sar follow these instructions:
-    - Install the sysstat package
-    - Edit /etc/default/sysstat and change Enabled to true
-    - Run "sudo service sysstat restart"
-    - sar is completely optional, it will not affect other reports
+6. The default reports `31-DiskCPUio`, `35-processStats`, and `36-sar` require the sysstat package. If this package is not installed the reports won't run. If you want to use any of these reports follow these instructions:
+	- Install the sysstat package
+	- Edit /etc/default/sysstat and change ENABLED to true
+	- Run "sudo service sysstat restart"
+	- These reports may be disabled, however even if enabled they will check for the presence of their respective commands before executing. You will see a message for that report indicating the package doesn't exists.
 
 Usage
 -----
@@ -58,7 +58,7 @@ Extra Reports (40s)
 -------------------
 
 * Elasticsearch log tail
-    - You will need to change the file name of the log file
+	- You will need to change the file name of the log file
 * Apache access log tail
 * Apache error log tail
 * Nginx access log tail
