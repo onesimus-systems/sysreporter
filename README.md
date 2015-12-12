@@ -31,7 +31,7 @@ sysreport [command] [arguments]
 Commands:
 
 - `run` - Run a full report and email if enabled
-- `show` - Show reports that will be ran
+- `show` - Show enabled and disabled reports
 - `enable` - Enable a set of reports `report.sh enable 41` or `report.sh enable apache`
 - `disable` - Disable a set of reports, same syntax as enable
 - `help` - Show usage
@@ -40,7 +40,7 @@ Commands:
 Reports
 -------
 
-Reports are located in the reports.d folder. Reports must be executable. Unexecutable files will be ignored as well as files without the .sh extension. The script may invoke any other program or shell but must accept at least two arguments. Argument 1 is the filename of the reporter script. Argument 2 is either "header" or "body". When invoked with "header", the script should print to standard output the header of the report. Likewise when invoked with "body" it should print the main part of the report. Everything printed to standard output will be included in the report. See the default reports for examples. Reports are executed in the alphabetical order. To ensure a particular order it is recommended to use a numbered prefix such as 10-Report.sh, 20-Report2.sh. This will ensure correct order.
+Reports are located in the reports.d folder. Reports must be executable. Unexecutable files will be ignored as well as files that don't match the FILTER setting. The script may invoke any other program or shell but must print to standard output. The first line while be interpreted as the report header, the remaining will be the body of the report. See the default reports for examples. Reports are executed in the alphabetical order. To ensure a particular order it is recommended to use a numbered prefix such as 10-Report.sh, 20-Report2.sh. This will ensure correct order.
 
 Default Reports (30s)
 ---------------------
@@ -51,8 +51,8 @@ Default Reports (30s)
 * Last boot time
 * Last 10 logged in users
 * Process statistics
-* System activity report (sar)
-* Syslog tail
+* System activity report
+* Last 25 syslog messages
 
 Extra Reports (40s)
 -------------------
