@@ -19,8 +19,8 @@ echoError() {
 }
 
 # Import server specific configuration
-if [ -f /etc/sysreporter.conf ]; then
-	source /etc/sysreporter.conf
+if [ -f /etc/sysreporter/sysreporter.conf ]; then
+	source /etc/sysreporter/sysreporter.conf
 elif [ -f "$DIR/sysreporter.conf" ]; then
 	source "$DIR/sysreporter.conf"
 else
@@ -50,6 +50,16 @@ TEMPMAIL="$TEMPDIR/mail"
 cleanup() {
 	cat /dev/null > "$LOGFILE"
 	cat /dev/null > "$TEMPMAIL"
+}
+
+checkTmpDir() {
+	if [ ! -d "$TEMPDIR" ]; then
+		mkdir -p "$TEMPDIR"
+		if [ $? != 0 ]; then
+			echoError "Can't make temporary directory $TEMPDIR"
+			exit 1
+		fi
+	fi
 }
 
 print_to_report() {
@@ -100,6 +110,7 @@ cmd_enable_disable() {
 }
 
 cmd_run() {
+	checkTmpDir
 	cleanup
 	print_header "$TITLE"
 

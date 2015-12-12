@@ -14,7 +14,7 @@ Install
 
 1. Move the SysReporter directory to a place of your choosing
 2. Move sysreporter.conf to /etc
-3. Edit /etc/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
+3. Edit /etc/sysreporter/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
 4. Install and setup ssmtp if you would like to receive the reports via email
 5. Setup a cron job to run periodically
 6. The default reports `31-DiskCPUio`, `35-processStats`, and `36-sar` require the sysstat package. If this package is not installed the reports won't run. If you want to use any of these reports follow these instructions:
