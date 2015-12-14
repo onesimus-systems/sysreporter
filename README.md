@@ -9,14 +9,14 @@ Requirements
 * ssmtp (if emailing is enabled)
 * sysstat (if using the DiskCPUio, processStats, or sar reports)
 
-Install
--------
+Install - Manually
+------------------
 
-1. Move the SysReporter directory to a place of your choosing
-2. Move sysreporter.conf to /etc
-3. Edit /etc/sysreporter/sysreporter.conf and fill in the server name variable and the email addresses to send the report (separated by comma).
-4. Install and setup ssmtp if you would like to receive the reports via email
-5. Setup a cron job to run periodically
+1. Download the source and extract it to a place of your choosing.
+2. Copy the sample config file to `sysreporter.conf`. The file may be in the same folder as the main script or in `/etc/sysreporter`. A config in the same directory will be used over one in etc.
+3. Edit sysreporter.conf and set the settings to your liking. The EMAIL_TO field must be set to send email. Addresses are separated by a comma.
+4. Install and setup ssmtp if you would like to receive the reports via email.
+5. Setup a cron job to run periodically.
 6. The default reports `31-DiskCPUio`, `35-processStats`, and `36-sar` require the sysstat package. If this package is not installed the reports won't run. If you want to use any of these reports follow these instructions:
 	- Install the sysstat package
 	- Edit /etc/default/sysstat and change ENABLED to true
@@ -32,27 +32,33 @@ Commands:
 
 - `run` - Run a full report and email if enabled
 - `show` - Show enabled and disabled reports
-- `enable` - Enable a set of reports `report.sh enable 41` or `report.sh enable apache`
+- `enable` - Enable a set of reports `sysreport enable 41` or `sysreport enable apache`
 - `disable` - Disable a set of reports, same syntax as enable
 - `help` - Show usage
 - `version` - Show version
 
+Reports may require root/elevated privileges to run. Make sure `sysreport` is ran from a user with these privileges.
+
 Reports
 -------
 
-Reports are located in the reports.d folder. Reports must be executable. Unexecutable files will be ignored as well as files that don't match the FILTER setting. The script may invoke any other program or shell but must print to standard output. The first line while be interpreted as the report header, the remaining will be the body of the report. See the default reports for examples. Reports are executed in the alphabetical order. To ensure a particular order it is recommended to use a numbered prefix such as 10-Report.sh, 20-Report2.sh. This will ensure correct order.
+Reports are located in the reports.d folder. Reports must be executable. Unexecutable files will be ignored as well as files that don't match the FILTER setting. The executable may be anything including a shell script, php/perl/ruby/etc script, or even a binary. Reports must print their heading and body to standard output which will be taken by the aggregator. The first line will be interpreted as the report header, the remaining will be the report body. An empty line between the header and body is not necessary. See the default reports for examples. Reports are executed in alphabetical order. To ensure a particular order it's recommended to use a numbered prefix such as 10-Report.sh, 20-Report2.sh. This will ensure correct order.
+
+The location of the reports.d directory when installed via an OS package will normally be at `/etc/sysreporter/reports.d`. Otherwise it will typically be in the same folder as the main script. The location is configurable in the configuration file.
 
 Default Reports (30s)
 ---------------------
 
 * Currently logged in users
-* CPU/Disk IO
+* CPU/Disk IO (sysstat)
 * Disk usage
 * Last boot time
 * Last 10 logged in users
-* Process statistics
-* System activity report
+* Process statistics (sysstat)
+* System activity report (sysstat)
 * Last 25 syslog messages
+
+Reports marked with "sysstat" require that package to run.
 
 Extra Reports (40s)
 -------------------
