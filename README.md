@@ -63,6 +63,7 @@ Extra Reports (40s)
 * Apache error log tail
 * Nginx access log tail
 * Nginx error log tail
+* NTP statistics (ntpq, ntpstat)
 
 License
 -------
