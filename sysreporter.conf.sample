@@ -10,6 +10,8 @@
 # REPORTSDIR="$DIR/reports.d"
 # TEMPDIR="$DIR/tmp"
 # FILTER=.* # Note, no double quotes
+# LOGFILE="$TEMPDIR/compiledlog.log"
+# TEMPMAIL="$TEMPDIR/mail"
 #
 # Syntax:
 # export SETTING_NAME="value"

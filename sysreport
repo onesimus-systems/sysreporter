@@ -19,10 +19,10 @@ echoError() {
 }
 
 # Import server specific configuration
-if [ -f /etc/sysreporter/sysreporter.conf ]; then
-	source /etc/sysreporter/sysreporter.conf
-elif [ -f "$DIR/sysreporter.conf" ]; then
+if [ -f "$DIR/sysreporter.conf" ]; then
 	source "$DIR/sysreporter.conf"
+elif [ -f /etc/sysreporter/sysreporter.conf ]; then
+	source /etc/sysreporter/sysreporter.conf
 else
 	echoError "No configuration file found"
 	exit 1
@@ -38,13 +38,8 @@ if [ -z ${EMAIL_SUBJECT+x} ]; then EMAIL_SUBJECT="Server Report - $SERVERNAME"; 
 if [ -z ${REPORTSDIR+x} ]; then REPORTSDIR="$DIR/reports.d"; fi
 if [ -z ${TEMPDIR+x} ]; then TEMPDIR="$DIR/tmp"; fi
 if [ -z ${FILTER+x} ]; then FILTER=*.sh; fi
-
-# Script variables
-## File for temporary output of currently compiled log, truncated on each run
-LOGFILE="$TEMPDIR/compiledlog.log"
-
-## Temp file for compiling email message
-TEMPMAIL="$TEMPDIR/mail"
+if [ -z ${LOGFILE+x} ]; then LOGFILE="$TEMPDIR/compiledlog.log"; fi
+if [ -z ${TEMPMAIL+x} ]; then TEMPMAIL="$TEMPDIR/mail"; fi
 
 # Functions
 cleanup() {
