@@ -18,11 +18,15 @@ echoError() {
 	>&2 echo -e "$1"
 }
 
+CONFFILE=""
+
 # Import server specific configuration
 if [ -f "$DIR/sysreporter.conf" ]; then
 	source "$DIR/sysreporter.conf"
+	CONFFILE="$DIR/sysreporter.conf"
 elif [ -f /etc/sysreporter/sysreporter.conf ]; then
 	source /etc/sysreporter/sysreporter.conf
+	CONFFILE="/etc/sysreporter/sysreporter.conf"
 else
 	echoError "No configuration file found"
 	exit 1
@@ -80,10 +84,19 @@ cmd_show() {
 	done
 	cd "$DIR"
 
-	echo "Enabled:"
+	echo "Configuration:"
+	echo "Conf File: $CONFFILE"
+	echo "Reports Dir: $REPORTSDIR"
+	echo "Servername: $SERVERNAME"
+	echo "Title: $TITLE"
+	echo "Email: $EMAIL_REPORT"
+	echo "Emails: $EMAIL_TO"
+	echo "Command Timeout: $CMDTIMEOUT seconds"
+	echo
+	echo "Enabled Reports:"
 	for f in "${ENABLED_ARR[@]}"; do echo "$f"; done
 	echo
-	echo "Disabled:"
+	echo "Disabled Reports:"
 	for f in "${DISABLED_ARR[@]}"; do echo "$f"; done
 }
 
