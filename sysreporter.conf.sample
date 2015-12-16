@@ -10,8 +10,16 @@
 # REPORTSDIR="$DIR/reports.d"
 # TEMPDIR="$DIR/tmp"
 # FILTER=.* # Note, no double quotes
+#
+# The location for a temporary file used to aggregate reports.
+# This file is truncated at the beginning of each run
 # LOGFILE="$TEMPDIR/compiledlog.log"
+#
+# This file is used as a temporary file used to format the email message
 # TEMPMAIL="$TEMPDIR/mail"
+#
+# This is the number of seconds to wait for a report to finish before killing it
+# CMDTIMEOUT=20
 #
 # Syntax:
 # export SETTING_NAME="value"

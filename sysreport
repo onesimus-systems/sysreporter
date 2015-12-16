@@ -1,11 +1,11 @@
 #!/bin/bash
 # Author: Lee Keitel
-# Version: 3.0.0a
+# Version: 3.0.0a4
 # License: MIT
 #
 
 ## Script version
-VERSION="3.0.0a"
+VERSION="3.0.0a4"
 
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -40,6 +40,7 @@ if [ -z ${TEMPDIR+x} ]; then TEMPDIR="$DIR/tmp"; fi
 if [ -z ${FILTER+x} ]; then FILTER=*.sh; fi
 if [ -z ${LOGFILE+x} ]; then LOGFILE="$TEMPDIR/compiledlog.log"; fi
 if [ -z ${TEMPMAIL+x} ]; then TEMPMAIL="$TEMPDIR/mail"; fi
+if [ -z ${CMDTIMEOUT+x} ]; then CMDTIMEOUT=20; fi
 
 # Functions
 cleanup() {
@@ -112,7 +113,11 @@ cmd_run() {
 	cd "$REPORTSDIR"
 	for f in $FILTER; do
 		if [ -x "$f" ]; then
-			REPORT="$(./$f)"
+			REPORT="$(timeout $CMDTIMEOUT ./$f)"
+			if [ $? -eq 124 ]; then
+				print_to_report "--- Truncated report, command $f timed out ---"
+			fi
+			# We'll print whatever header and body was received
 			print_header "$(echo "$REPORT" | head -1)"
 			print_to_report "$(echo "$REPORT" | tail -n +2)"
 			print_to_report
@@ -120,7 +125,15 @@ cmd_run() {
 	done
 	cd "$DIR"
 
-	mail_report
+	case "$1" in
+		stdout)
+			cat "$LOGFILE"
+			;;
+		email)
+			;&
+		*) # Default, implied "email"
+			mail_report
+	esac
 	return
 }
 
@@ -150,10 +163,10 @@ mail_report() {
 cmd_usage() {
 	cmd_version
 	echo
-	echo "Usage: $0 [command]"
+	echo "Usage: $0 [command] [options]"
 	echo
 	echo "Commands:"
-	echo "    run"
+	echo "    run [stdout|email]"
 	echo "    show"
 	echo "    enable"
 	echo "    disable"

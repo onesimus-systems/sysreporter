@@ -31,6 +31,9 @@ sysreport [command] [arguments]
 Commands:
 
 - `run` - Run a full report and email if enabled
+	- Arguments:
+	- `stdout` - Print the full report to standard output. Will not send an email.
+	- `email` - Default, if no argument is given this is implied. Will compile a report as usual and email if email is enabled.
 - `show` - Show enabled and disabled reports
 - `enable` - Enable a set of reports `sysreport enable 41` or `sysreport enable apache`
 - `disable` - Disable a set of reports, same syntax as enable
