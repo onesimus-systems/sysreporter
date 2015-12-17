@@ -1,0 +1,78 @@
+.TH man 1 "17 Dec 2015" "3.0" "sysreporter man page"
+
+.SH NAME
+sysreporter \- Simple system statistics aggregator and emailer
+
+.SH SYNOPSIS
+\fBsysreport\fP COMMAND [ARGUMENTS]
+
+.SH DESCRIPTION
+\fBsysreport\fP is a tool to run multiple reports on a system and then either email a sysadmin or save the report to a specific location for later review. Reports can be anything from a simple shell script to a native binary.
+
+.SH COMMANDS
+.TP
+\fBrun\fP
+Generate a new report by executing all enabled reports and aggregating their output into a single report. run can be ran with the arguments \fBemail\fP or \fBstdout\fP to specify where the output will go. Email is assumed if neither is given.
+
+.TP
+\fBshow\fP
+Display configuration settings that sysreporter is currently using as well as enabled and disabled reports.
+
+.TP
+\fBenable\fP PATTERN
+Enable reports matching PATTERN.
+
+.TP
+\fBdisable\fP PATTERN
+Disable reports matching PATTERN.
+
+.TP
+\fBhelp\fP
+Display help information.
+
+.TP
+\fBversion\fP
+Print version information.
+
+.SH EXAMPLES
+To generate a report and email it use one of the following:
+.PP
+.nf
+.RS
+sysreport run
+sysreport run email
+.RE
+.fi
+
+.PP
+To generate a report and print it to standard out:
+.PP
+.nf
+.RS
+sysreport run stdout
+.RE
+.fi
+
+.PP
+To enable a report by its number:
+.PP
+.nf
+.RS
+sysreport enable 43
+.RE
+.fi
+
+.PP
+Or by name (enable all apache reports):
+.PP
+.nf
+.RS
+sysreport enable apache
+.RE
+.fi
+
+.SH BUGS
+File a bug report at https://github.com/onesimus-systems/sysreporter.
+
+.SH AUTHOR
+Lee Keitel (lee@onesimussystems.com)

@@ -28,3 +28,6 @@ install: sysreport
 	install -d $(destreportsdir)
 	install -m644 -D reports.d/* $(destreportsdir)
 	chmod +x $(destreportsdir)/3*
+
+# Install manpage
+	install -m644 sysreport.1 $(DESTDIR)$(man1dir)
