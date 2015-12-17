@@ -2,14 +2,14 @@
 #
 # Available settings and defaults:
 # SERVERNAME="$(hostname)"
-# EMAIL_REPORT=true
+# EMAIL_REPORT=true # set to false if EMAIL_TO is empty
 # EMAIL_TO=""
 # EMAIL_FROM="root@$SERVERNAME"
 # EMAIL_SUBJECT="Server Report - $SERVERNAME"
 # TITLE="Server Report for $SERVERNAME on $DATENOW"
 # REPORTSDIR="$DIR/reports.d"
 # TEMPDIR="$DIR/tmp"
-# FILTER=.* # Note, no double quotes
+# FILTER=* # Note, no double quotes
 #
 # The location for a temporary file used to aggregate reports.
 # This file is truncated at the beginning of each run
@@ -22,10 +22,10 @@
 # CMDTIMEOUT=20
 #
 # Syntax:
-# export SETTING_NAME="value"
+# SETTING_NAME="value"
 
 ## Email addresses to send report to, separated by comma
-export EMAIL_TO=""
+EMAIL_TO=""
 
 ## Email address to use a from address
-export EMAIL_FROM=""
+EMAIL_FROM=""

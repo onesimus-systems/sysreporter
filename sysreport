@@ -1,11 +1,11 @@
 #!/bin/bash
 # Author: Lee Keitel
-# Version: 3.0.0a4
+# Version: 3.0.0a6
 # License: MIT
 #
 
 ## Script version
-VERSION="3.0.0a4"
+VERSION="3.0.0a6"
 
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,28 +20,43 @@ echoError() {
 
 CONFFILE=""
 
-# Import server specific configuration
+# Import portable configuration
 if [ -f "$DIR/sysreporter.conf" ]; then
-	source "$DIR/sysreporter.conf"
 	CONFFILE="$DIR/sysreporter.conf"
+# Import server specific configuration
 elif [ -f /etc/sysreporter/sysreporter.conf ]; then
-	source /etc/sysreporter/sysreporter.conf
 	CONFFILE="/etc/sysreporter/sysreporter.conf"
 else
 	echoError "No configuration file found"
 	exit 1
 fi
 
+# Safely load in configuration options
+shopt -s extglob
+unixconfig="/tmp/$(basename $CONFFILE).unix"
+tr -d '\r' < $CONFFILE > $unixconfig # Ensure unix line endings
+while IFS='= ' read lhs rhs; do
+	if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+		rhs="${rhs%%\#*}"    # Del inline right comments
+		rhs="${rhs%%*( )}"   # Del trailing spaces
+		rhs="${rhs%\"*}"     # Del opening string quotes
+		rhs="${rhs#\"*}"     # Del closing string quotes
+		declare $lhs="$rhs"
+	fi
+done < $unixconfig
+
 # Check and set any missing configuration settings
 if [ -z ${SERVERNAME+x} ]; then SERVERNAME="$(hostname)"; fi
-if [ -z ${EMAIL_REPORT+x} ]; then EMAIL_REPORT=true; fi
 if [ -z ${EMAIL_TO+x} ]; then EMAIL_TO=""; fi
+if [ -z ${EMAIL_REPORT+x} ]; then
+	[ -n "$EMAIL_TO" ] && EMAIL_REPORT=true || EMAIL_REPORT=false
+fi
 if [ -z ${EMAIL_FROM+x} ]; then EMAIL_FROM="root@$SERVERNAME"; fi
 if [ -z ${TITLE+x} ]; then TITLE="Server Report for $SERVERNAME on $DATENOW"; fi
 if [ -z ${EMAIL_SUBJECT+x} ]; then EMAIL_SUBJECT="Server Report - $SERVERNAME"; fi
 if [ -z ${REPORTSDIR+x} ]; then REPORTSDIR="$DIR/reports.d"; fi
 if [ -z ${TEMPDIR+x} ]; then TEMPDIR="$DIR/tmp"; fi
-if [ -z ${FILTER+x} ]; then FILTER=*.sh; fi
+if [ -z ${FILTER+x} ]; then FILTER=*; fi
 if [ -z ${LOGFILE+x} ]; then LOGFILE="$TEMPDIR/compiledlog.log"; fi
 if [ -z ${TEMPMAIL+x} ]; then TEMPMAIL="$TEMPDIR/mail"; fi
 if [ -z ${CMDTIMEOUT+x} ]; then CMDTIMEOUT=20; fi
@@ -89,7 +104,7 @@ cmd_show() {
 	echo "Reports Dir: $REPORTSDIR"
 	echo "Servername: $SERVERNAME"
 	echo "Title: $TITLE"
-	echo "Email: $EMAIL_REPORT"
+	echo "Email Report: $EMAIL_REPORT"
 	echo "Emails: $EMAIL_TO"
 	echo "Command Timeout: $CMDTIMEOUT seconds"
 	echo
@@ -105,13 +120,13 @@ cmd_enable_disable() {
 	for f in $FILTER; do
 		if [[ "$f" =~ "$2" ]]; then
 			case $1 in
-				enable)
-					echo "Enabling $f"
-					chmod +x $f
-					;;
-				disable)
-					echo "Disabling $f"
-					chmod -x $f
+			enable)
+				echo "Enabling $f"
+				chmod +x $f
+				;;
+			disable)
+				echo "Disabling $f"
+				chmod -x $f
 			esac
 		fi
 	done
@@ -130,7 +145,7 @@ cmd_run() {
 			if [ $? -eq 124 ]; then
 				print_to_report "--- Truncated report, command $f timed out ---"
 			fi
-			# We'll print whatever header and body was received
+			# We'll print whatever header and body as received
 			print_header "$(echo "$REPORT" | head -1)"
 			print_to_report "$(echo "$REPORT" | tail -n +2)"
 			print_to_report
@@ -139,13 +154,13 @@ cmd_run() {
 	cd "$DIR"
 
 	case "$1" in
-		stdout)
-			cat "$LOGFILE"
-			;;
-		email)
-			;&
-		*) # Default, implied "email"
-			mail_report
+	stdout)
+		cat "$LOGFILE"
+		;;
+	email)
+		;&
+	*) # Default, implied "email"
+		mail_report
 	esac
 	return
 }
@@ -176,7 +191,7 @@ mail_report() {
 cmd_usage() {
 	cmd_version
 	echo
-	echo "Usage: $0 [command] [options]"
+	echo "Usage: $(basename $0) [command] [options]"
 	echo
 	echo "Commands:"
 	echo "    run [stdout|email]"
