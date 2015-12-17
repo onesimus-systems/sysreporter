@@ -8,6 +8,9 @@ destbin = $(DESTDIR)$(bindir)
 destconf = $(DESTDIR)$(confdir)
 destreportsdir = $(destconf)/reports.d
 
+all:
+# noop
+
 .PHONY: install
 install: sysreport
 # Make destination directories if needed
@@ -18,7 +21,7 @@ install: sysreport
 
 # Install and setup configuration file
 	install -m644 -T sysreporter.conf.sample $(destconf)/sysreporter.conf
-	@echo "export REPORTSDIR=\"$(destreportsdir)\"" >> $(destconf)/sysreporter.conf
+	@echo "export REPORTSDIR=\"$(confdir)/reports.d\"" >> $(destconf)/sysreporter.conf
 	@echo "export TEMPDIR=\"/tmp/sysreporter\"" >> $(destconf)/sysreporter.conf
 
 # Install and enable default reports
