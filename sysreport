@@ -1,11 +1,10 @@
 #!/bin/bash
 # Author: Lee Keitel
-# Version: 3.0.0a6
 # License: MIT
 #
 
 ## Script version
-VERSION="3.0.0a6"
+VERSION="3.0.0"
 
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
