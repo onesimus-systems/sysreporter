@@ -1,12 +1,11 @@
 prefix = /usr/local
 confdir = /etc/sysreporter
 bindir = $(prefix)/bin
-sharedir = $(prefix)/share
-mandir = $(sharedir)/man
-man1dir = $(mandir)/man1
+man1dir = $(prefix)/share/man/man1
 destbin = $(DESTDIR)$(bindir)
 destconf = $(DESTDIR)$(confdir)
 destreportsdir = $(destconf)/reports.d
+destman = $(DESTDIR)$(man1dir)
 
 all:
 # noop
@@ -16,6 +15,7 @@ install: sysreport
 # Make destination directories if needed
 	$(shell [ ! -d $(destconf) ] && mkdir -p $(destconf))
 	$(shell [ ! -d $(destbin) ] && mkdir -p $(destbin))
+	$(shell [ ! -d $(destman) ] && mkdir -p $(destman))
 
 	install sysreport $(destbin)
 
@@ -30,4 +30,4 @@ install: sysreport
 	chmod +x $(destreportsdir)/3*
 
 # Install manpage
-	install -m644 sysreport.1 $(DESTDIR)$(man1dir)
+	install -m644 sysreport.1 $(destman)
