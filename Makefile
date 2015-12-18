@@ -21,8 +21,8 @@ install: sysreport
 
 # Install and setup configuration file
 	install -m644 -T sysreporter.conf.sample "$(destconf)/sysreporter.conf"
-	@echo "export REPORTSDIR=\"$(confdir)/reports.d\"" >> "$(destconf)/sysreporter.conf"
-	@echo "export TEMPDIR=\"/tmp/sysreporter\"" >> "$(destconf)/sysreporter.conf"
+	@echo "REPORTSDIR=\"$(confdir)/reports.d\"" >> "$(destconf)/sysreporter.conf"
+	@echo "TEMPDIR=\"/tmp/sysreporter\"" >> "$(destconf)/sysreporter.conf"
 
 # Install and enable default reports
 	install -d "$(destreportsdir)"
