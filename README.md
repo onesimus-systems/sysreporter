@@ -12,7 +12,7 @@ Requirements
 Install - Package Manager
 -------------------------
 
-Linux distro packages are available for both Ubuntu and Fedora. This is the easiest way to install sysreporter but these package may be outdated compared to the source. Typically this isn't an issue.
+Linux distro packages are available for Ubuntu, Fedora, Red Hat Enterprise Linux (RHEL), and CentOS. This is the easiest way to install sysreporter but these package may be outdated compared to the source. Typically this isn't an issue.
 
 Ubuntu:
 
@@ -25,7 +25,15 @@ $ sudo apt-get install sysreporter
 Fedora:
 
 ```bash
-$ TODO
+$ dnf install sysreporter
+```
+
+RHEL/CentOS:
+
+```bash
+$ yum install http://download.fedoraproject.org/epel/epel-release-latest-7.noarch.rpm  For RHEL/CentOS 7 (if EPEL is not already installed)
+$ yum install http://download.fedoraproject.org/epel/epel-release-latest-6.noarch.rpm  For RHEL/CentOS 6 (if EPEL is not already installed)
+$ yum install sysreporter
 ```
 
 Install - Automatic - Source
