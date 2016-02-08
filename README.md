@@ -72,7 +72,7 @@ Reports may require root/elevated privileges to run. Make sure `sysreport` is ra
 Setup Email
 -----------
 
-Sysreporter by default uses `ssmtp` for email. If you wish to receive email you'll need to install and setup that package. Please refer to ssmtp's documentation for details.
+Sysreporter by default uses `ssmtp` for email. If you wish to receive email you'll need to install and setup that package. Please refer to ssmtp's documentation for details.  You may want to set FromLineOverride=YES in your ssmtp.conf to allow the settings from EMAIL_FROM to be effective.
 
 Setup Cron
 ----------
