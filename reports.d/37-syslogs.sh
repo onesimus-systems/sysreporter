@@ -1,7 +1,7 @@
 #! /bin/bash
 echo "System Logs"
 
-if [ -n "$(which journalctl)" ]; then
+if [ -n "$(which journalctl 2>/dev/null)" ]; then
 	echo "$(journalctl -rn 25 --no-pager)"
 elif [ -f /var/log/syslog ]; then
 	echo "$(tail -n 25 /var/log/syslog | tac)"
