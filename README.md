@@ -75,7 +75,7 @@ You may want to set FromLineOverride=YES in your ssmtp.conf to allow the setting
 
 ## Setup Cron
 
-A simple way to use sysreporter is to setup ssmtp and setup a cron job to run periodically. The easiest way to set that up is to use crontab by running `crontab -e` and adding the line `* 9 * * * /usr/bin/sysreport run email >/dev/null 2>&1`. This job will email a report everyday at 9:00a.
+A simple way to use sysreporter is to setup ssmtp and setup a cron job to run periodically. The easiest way to set that up is to use crontab by running `crontab -e` and adding the line `0 9 * * * /usr/bin/sysreport run email >/dev/null 2>&1`. This job will email a report everyday at 9:00a.
 
 ## Setup sysstat
 
