@@ -1,10 +1,11 @@
-#!/bin/bash
+#! /usr/bin/env bash
+#
 # Author: Lee Keitel
 # License: MIT
 #
 
 ## Script version
-VERSION="3.0.0"
+VERSION="3.0.4"
 
 ## Directory of running script
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -46,6 +47,7 @@ done < $unixconfig
 
 # Check and set any missing configuration settings
 if [ -z ${SERVERNAME+x} ]; then SERVERNAME="$(hostname)"; fi
+if [ -z ${MAILER+x} ]; then MAILER="ssmtp"; fi
 if [ -z ${EMAIL_TO+x} ]; then EMAIL_TO=""; fi
 if [ -z ${EMAIL_REPORT+x} ]; then
 	[ -n "$EMAIL_TO" ] && EMAIL_REPORT=true || EMAIL_REPORT=false
@@ -104,7 +106,7 @@ cmd_show() {
 	echo "Servername: $SERVERNAME"
 	echo "Title: $TITLE"
 	echo "Email Report: $EMAIL_REPORT"
-	echo "Emails: $EMAIL_TO"
+	echo "Send Email To: $EMAIL_TO"
 	echo "Command Timeout: $CMDTIMEOUT seconds"
 	echo
 	echo "Enabled Reports:"
@@ -169,8 +171,8 @@ mail_report() {
 		return 0
 	fi
 
-	if [ -z "$(which ssmtp)" ]; then
-		echoError "Can't send mail, ssmtp not installed"
+	if [ -z "$(which $MAILER 2> /dev/null)" ]; then
+		echoError "Can't send mail, mailer $MAILER not found"
 		return 1
 	fi
 
@@ -184,7 +186,7 @@ mail_report() {
 	echo "Subject: $EMAIL_SUBJECT" >> "$TEMPMAIL"
 	echo >> "$TEMPMAIL"
 	cat "$LOGFILE" >> "$TEMPMAIL"
-	ssmtp "$EMAIL_TO" < "$TEMPMAIL"
+	$MAILER "$EMAIL_TO" < "$TEMPMAIL"
 }
 
 cmd_usage() {
@@ -214,7 +216,6 @@ case "$1" in
 	run) shift;				cmd_run "$@" ;;
 	show) shift;			cmd_show "$@" ;;
 	enable|disable) 		  cmd_enable_disable "$@" ;;
-	help|--help) shift;		cmd_usage "$@" ;;
 	version|--version) shift;  cmd_version "$@" ;;
 	*) cmd_usage "$@" ;;
 esac
