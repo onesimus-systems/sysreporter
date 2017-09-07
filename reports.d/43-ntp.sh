@@ -2,15 +2,11 @@
 echo "NTP Statistics"
 
 if [ -n "$(which ntpq)" ]; then
-	echo "$(ntpq -p)"
-else
-	echo "ntpq not installed"
+	echo "$(ntpq -p 2>&1)"
 fi
 
 echo
 
-if [ -n "$(which ntpstat)" ]; then
-	echo "$(ntpstat)"
-else
-	echo "ntpstat not installed"
+if [ -n "$(which chronyc)" ]; then
+	echo "$(chronyc sources)"
 fi
